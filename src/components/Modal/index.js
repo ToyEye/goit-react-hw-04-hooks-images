@@ -1,1 +1,1 @@
-export { default } from './Modal.styled';
+export { default } from './Modal';

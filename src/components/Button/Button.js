@@ -9,7 +9,7 @@ const Button = ({ name, onLoadMoreButton }) => (
 );
 
 Button.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   onLoadMoreButton: PropTypes.func.isRequired,
 };
 

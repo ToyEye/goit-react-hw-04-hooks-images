@@ -7,7 +7,7 @@ import Button from './components/Button';
 import LoaderSimbol from './components/Loader';
 import Modal from './components/Modal';
 import toast, { Toaster } from 'react-hot-toast';
-import getImages from './servisec/api';
+import getImages from './serviceApi/api';
 
 export default function App() {
   const [images, setImages] = useState([]);
@@ -17,10 +17,14 @@ export default function App() {
   const [largeImageURL, setLargeImageURL] = useState('');
 
   useEffect(() => {
+    if (search === '') {
+      return;
+    }
+
     const fetchData = async () => {
       setPage(1);
       await getImages(search, 1).then(data => {
-        if (data.hits.length < 1) {
+        if (data.total < 1) {
           toast.error('По вашему запросу ничего не найдно, введите другой запрос', {
             duration: 2000,
             style: {
@@ -33,6 +37,7 @@ export default function App() {
           });
           return;
         }
+
         setImages(data.hits);
         setPage(prevState => prevState + 1);
       });

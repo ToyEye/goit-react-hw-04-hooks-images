@@ -1,1 +1,1 @@
-export { default } from './LoaderSimbol.styled';
+export { default } from './LoaderSimbol';
