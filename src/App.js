@@ -15,6 +15,7 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     if (search === '') {
@@ -37,7 +38,7 @@ export default function App() {
           });
           return;
         }
-
+        setData(data.totalHits);
         setImages(data.hits);
         setPage(prevState => prevState + 1);
       });
@@ -94,7 +95,7 @@ export default function App() {
           onLargeImgClick={onLargeImgClick}
         />
       )}
-      {images.length > 1 && <Button name={'Load more'} onLoadMoreButton={onLoadMoreButton} />}
+      {data > 12 && <Button name={'Load more'} onLoadMoreButton={onLoadMoreButton} />}
     </div>
   );
 }
