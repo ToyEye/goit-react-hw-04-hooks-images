@@ -13,6 +13,7 @@ export default function App() {
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [showLoader, setShowLoader] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
   const [data, setData] = useState(null);
@@ -23,8 +24,11 @@ export default function App() {
     }
 
     const fetchData = async () => {
-      setPage(1);
-      await getImages(search, 1).then(data => {
+      setShowLoader(true);
+
+      await getImages(search, page).then(data => {
+        setShowLoader(true);
+
         if (data.total < 1) {
           toast.error('По вашему запросу ничего не найдно, введите другой запрос', {
             duration: 2000,
@@ -36,21 +40,20 @@ export default function App() {
               textAlign: 'center',
             },
           });
+          setShowLoader(false);
           return;
         }
+
         setData(data.totalHits);
-        setImages(data.hits);
-        setPage(prevState => prevState + 1);
+        setImages(prevState => [...prevState, ...data.hits]);
+        setShowLoader(false);
       });
     };
     fetchData();
-  }, [search]);
+  }, [page, search]);
 
   const onLoadMoreButton = () => {
-    getImages(search, page).then(data => {
-      setPage(prevState => prevState + 1);
-      setImages(prevState => [...prevState, ...data.hits]);
-    });
+    setPage(prevState => prevState + 1);
     handleScroll();
   };
 
@@ -75,7 +78,7 @@ export default function App() {
     setShowModal(prevState => !prevState);
     setLargeImageURL(img);
   };
-
+  console.log(showLoader);
   return (
     <div className="App">
       <Toaster />
@@ -86,7 +89,7 @@ export default function App() {
         </Modal>
       )}
       <Searchbar onSubmit={onSubmitHandler} />
-      {images.length < 1 ? (
+      {showLoader ? (
         <LoaderSimbol />
       ) : (
         <ImageGallery

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Loader from 'react-loader-spinner';
+import { Grid } from 'react-loader-spinner';
 
 const LoaderContainer = styled.div`
   position: fixed;
@@ -14,7 +14,7 @@ export { LoaderContainer };
 const LoaderSimbol = () => {
   return (
     <LoaderContainer>
-      <Loader type="Grid" color="#00BFFF" height={80} width={80} timeout={1000} />
+      <Grid color="#00BFFF" height={80} width={80} timeout={1000} />
     </LoaderContainer>
   );
 };
