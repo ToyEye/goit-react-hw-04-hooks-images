@@ -16,7 +16,7 @@ export default function App() {
   const [showLoader, setShowLoader] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(0);
 
   useEffect(() => {
     if (search === '') {
@@ -78,7 +78,7 @@ export default function App() {
     setShowModal(prevState => !prevState);
     setLargeImageURL(img);
   };
-  console.log(showLoader);
+
   return (
     <div className="App">
       <Toaster />
@@ -98,7 +98,9 @@ export default function App() {
           onLargeImgClick={onLargeImgClick}
         />
       )}
-      {data > 12 && <Button name={'Load more'} onLoadMoreButton={onLoadMoreButton} />}
+      {!showLoader && images.length !== data && (
+        <Button name={'Load more'} onLoadMoreButton={onLoadMoreButton} />
+      )}
     </div>
   );
 }
