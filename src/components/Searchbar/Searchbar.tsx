@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import s from './Searchbar.module.css';
-import PropTypes from 'prop-types';
+
 import toast from 'react-hot-toast';
+
 import { ImSearch } from 'react-icons/im';
 
-export default function Searchbar({ onSubmit }) {
+type Props = {
+  onSubmit: (args: string) => void;
+};
+
+const Searchbar = ({ onSubmit }: Props) => {
   const [value, setValue] = useState('');
 
-  const hadldeChange = evt => {
-    setValue(evt.target.value);
+  const hadldeChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    setValue(evt.currentTarget.value);
   };
 
-  const handleSubmit = evt => {
+  const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
     if (value === '') {
       toast.error('Необходимо ввести запрос', {
@@ -50,7 +55,6 @@ export default function Searchbar({ onSubmit }) {
       </form>
     </header>
   );
-}
-Searchbar.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
+
+export default Searchbar;

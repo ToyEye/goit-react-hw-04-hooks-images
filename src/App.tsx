@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+
 import './index.css';
+
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import LoaderSimbol from './components/Loader';
 import Modal from './components/Modal';
 import toast, { Toaster } from 'react-hot-toast';
+
 import getImages from './serviceApi/api';
 
+type TImages = {
+  id: string;
+  webformatURL: string;
+  largeImageURL: string;
+};
+
 export default function App() {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<TImages[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [showLoader, setShowLoader] = useState(false);
@@ -30,16 +38,19 @@ export default function App() {
         setShowLoader(true);
 
         if (data.total < 1) {
-          toast.error('По вашему запросу ничего не найдно, введите другой запрос', {
-            duration: 2000,
-            style: {
-              borderRadius: '10px',
-              background: '#333',
-              color: '#fff',
-              padding: '10px',
-              textAlign: 'center',
-            },
-          });
+          toast.error(
+            'По вашему запросу ничего не найдно, введите другой запрос',
+            {
+              duration: 2000,
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+                padding: '10px',
+                textAlign: 'center',
+              },
+            }
+          );
           setShowLoader(false);
           return;
         }
@@ -66,17 +77,17 @@ export default function App() {
     }, 500);
   };
 
-  const onSubmitHandler = value => {
+  const onSubmitHandler = (value: string) => {
     setSearch(value);
   };
 
-  const onLargeImgClick = largeImageURL => {
+  const onLargeImgClick = (largeImageURL: string) => {
     setLargeImageURL(largeImageURL);
+    onToggleModal();
   };
 
-  const onToggleModal = img => {
+  const onToggleModal = () => {
     setShowModal(prevState => !prevState);
-    setLargeImageURL(img);
   };
 
   return (
@@ -89,22 +100,13 @@ export default function App() {
         </Modal>
       )}
       <Searchbar onSubmit={onSubmitHandler} />
-      {showLoader ? (
-        <LoaderSimbol />
-      ) : (
-        <ImageGallery
-          images={images}
-          onOpenModal={onToggleModal}
-          onLargeImgClick={onLargeImgClick}
-        />
-      )}
+      {showLoader && <LoaderSimbol />}
+
+      <ImageGallery images={images} onLargeImgClick={onLargeImgClick} />
+
       {!showLoader && images.length !== data && (
         <Button name={'Load more'} onLoadMoreButton={onLoadMoreButton} />
       )}
     </div>
   );
 }
-App.propTypes = {
-  largeImageURL: PropTypes.string,
-  search: PropTypes.string,
-};
